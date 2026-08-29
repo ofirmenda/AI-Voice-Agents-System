@@ -1,8 +1,8 @@
-# outbound-concierge
+# AI-Voice-Agents-System
 
-![tests](https://github.com/ofirmenda/outbound-concierge/actions/workflows/tests.yml/badge.svg)
+![tests](https://github.com/ofirmenda/AI-Voice-Agents-System/actions/workflows/tests.yml/badge.svg)
 
-An **outbound-concierge** pattern — proactive AI that reaches out to a customer at the right moment, carries a real conversation, handles what it can, and cleanly hands off what it can't. The demo applies the pattern to airline check-in: a Hebrew AI voice agent (נועם) dials passengers when online check-in opens 24 h before departure, completes check-in over the phone, answers policy questions from a retrieval service, offers relevant ancillary services, and turns anything unresolved into a support ticket. An asynchronous multi-agent pipeline in Langflow then triages those tickets and drafts replies by email. Everything runs on one Postgres and one HTTP RAG service so the components stay swappable.
+A system of cooperating AI agents that share responsibility for a customer service journey. A **real-time Hebrew voice agent** (נועם) dials the customer over the phone and runs the conversation live. An **asynchronous multi-agent Langflow pipeline** — orchestrator → analysis → response — picks up whatever the voice call couldn't close and drafts a reply by email. The demo applies the system to airline check-in: the voice agent dials passengers 24 h before departure, completes check-in, answers policy questions from a retrieval service, offers relevant ancillary services, and turns unresolved requests into support tickets. Langflow then reads those tickets, runs SQL against the shared Postgres, and sends replies through Gmail. Everything runs behind one HTTP RAG service and one Postgres so the pieces stay swappable.
 
 > **Disclaimer.** This is a portfolio demonstration built around EL AL Israel Airlines as the application domain. Policy documents, pricing, and passenger data are illustrative and not authorised by EL AL. The architecture is domain-neutral and reuses cleanly for hotel check-in, appointment reminders, insurance intake, and any other proactive service journey.
 

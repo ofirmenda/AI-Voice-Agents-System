@@ -1,4 +1,4 @@
-# Build brief: `outbound-concierge`
+# Build brief: `AI-Voice-Agents-System`
 
 **Read this whole file before writing any code.** It describes an existing repository, three
 disconnected assignment artifacts, and the work required to merge them into one coherent
@@ -142,7 +142,7 @@ human-readable mirror, not as the system of record.
 ## 5. Target repository layout
 
 ```
-outbound-concierge/
+AI-Voice-Agents-System/
 ├── README.md                     # architecture, quickstart, demo links
 ├── docker-compose.yml
 ├── .env.example
@@ -410,7 +410,7 @@ Do not attempt these; flag them when the corresponding phase lands.
 6. Add a quantified ROI slide to the deck: calls/day × ancillary conversion × average price,
    against per-minute call cost and deflected human-agent contacts. The original assignment
    asked for ROI explicitly.
-7. Rename the GitHub repository to `outbound-concierge`.
+7. Rename the GitHub repository to `AI-Voice-Agents-System`.
 
 ---
 
@@ -514,7 +514,7 @@ recording demonstrates retrieval visibly, not just check-in.
 ### 10.6 Rename the GitHub repository
 
 **Where:** GitHub → Settings → Repository name.
-**What:** rename `part-2-home-assesment` → `outbound-concierge`. The existing remote will
+**What:** rename `part-2-home-assesment` → `AI-Voice-Agents-System`. The existing remote will
 redirect for a while; still update the `origin` URL locally afterwards.
 
 ### 10.7 First real `docker compose up`
