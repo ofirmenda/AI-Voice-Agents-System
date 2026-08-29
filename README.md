@@ -1,10 +1,10 @@
-# elal-voice-ops
+# outbound-concierge
 
-![tests](https://github.com/ofirmenda/part-2-home-assesment/actions/workflows/tests.yml/badge.svg)
+![tests](https://github.com/ofirmenda/outbound-concierge/actions/workflows/tests.yml/badge.svg)
 
-An outbound conversational check-in system for EL AL Israel Airlines: a Hebrew AI voice agent (נועם) calls passengers when online check-in opens, completes check-in, answers policy questions from a retrieval service, and offers relevant ancillary services. Anything the agent cannot resolve becomes a support ticket that an asynchronous multi-agent pipeline in Langflow triages and answers by email. The three home-assignment deliverables (voice agent, embedding search, multi-agent Langflow) are stitched into one running system that shares a single Postgres and one HTTP RAG service.
+An **outbound-concierge** pattern — proactive AI that reaches out to a customer at the right moment, carries a real conversation, handles what it can, and cleanly hands off what it can't. The demo applies the pattern to airline check-in: a Hebrew AI voice agent (נועם) dials passengers when online check-in opens 24 h before departure, completes check-in over the phone, answers policy questions from a retrieval service, offers relevant ancillary services, and turns anything unresolved into a support ticket. An asynchronous multi-agent pipeline in Langflow then triages those tickets and drafts replies by email. Everything runs on one Postgres and one HTTP RAG service so the components stay swappable.
 
-> **Disclaimer.** This is a portfolio demonstration, not an EL AL product. Policy documents, pricing, and passenger data are illustrative. Nothing here is authorised by EL AL.
+> **Disclaimer.** This is a portfolio demonstration built around EL AL Israel Airlines as the application domain. Policy documents, pricing, and passenger data are illustrative and not authorised by EL AL. The architecture is domain-neutral and reuses cleanly for hotel check-in, appointment reminders, insurance intake, and any other proactive service journey.
 
 ## Architecture
 
@@ -98,9 +98,9 @@ Three Agents wired agent-as-tool: **Orchestrator** (memory tool + Analysis as a 
 
 ## Demo assets
 
-- Deck: [docs/presentation.pdf](docs/presentation.pdf)
-- Voice call recording: [docs/demo/](docs/demo/)
-- Langflow walkthrough video: [docs/demo/](docs/demo/)
+- Deck (7 slides, PDF): [docs/presentation.pdf](docs/presentation.pdf)
+- Hebrew check-in call recording: [docs/demo/voice recording.wav](docs/demo/voice%20recording.wav)
+- Langflow walkthrough (screen recording): [docs/demo/flow_presentation.mp4](docs/demo/flow_presentation.mp4)
 
 ## Tests
 
