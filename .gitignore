@@ -1,5 +1,7 @@
 .env
-.venv/
+**/data/index.json
+**/test_results.txt
 __pycache__/
-.pytest_cache/
 *.pyc
+.venv/
+.pytest_cache/
