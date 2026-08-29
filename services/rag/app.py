@@ -23,9 +23,10 @@ def extract_text(file_path: str | Path) -> str:
     if not path.is_file():
         raise FileNotFoundError(f"File not found: {path}")
 
-    if path.suffix.lower() == ".txt":
+    suffix = path.suffix.lower()
+    if suffix in {".txt", ".md"}:
         text = path.read_text(encoding="utf-8")
-    elif path.suffix.lower() == ".pdf":
+    elif suffix == ".pdf":
         try:
             import pymupdf
         except ImportError as error:
@@ -34,7 +35,7 @@ def extract_text(file_path: str | Path) -> str:
         with pymupdf.open(path) as document:
             text = "\n\n".join(page.get_text() for page in document)
     else:
-        raise ValueError("Only .txt and .pdf files are supported.")
+        raise ValueError("Only .txt, .md and .pdf files are supported.")
 
     text = text.strip()
     if not text:
@@ -116,16 +117,16 @@ def build_index(file_path: str | Path, store_path: str | Path, client: OpenAI, m
     return len(chunks)
 
 
-def search_index(
+def rank_index(
     question: str,
-    store_path: str | Path,
+    index: dict[str, Any],
     client: OpenAI,
     model: str,
     top_k: int = 3,
 ) -> list[dict[str, Any]]:
+    """Rank an already-loaded index for a question. Used by the HTTP service."""
     if top_k < 1:
         raise ValueError("top_k must be at least 1.")
-    index = load_index(store_path)
     question_embedding = create_embeddings(client, [question], model)[0]
     ranked = sorted(
         (
@@ -141,6 +142,19 @@ def search_index(
     if not ranked:
         raise ValueError("The index contains no chunks.")
     return ranked[:top_k]
+
+
+def search_index(
+    question: str,
+    store_path: str | Path,
+    client: OpenAI,
+    model: str,
+    top_k: int = 3,
+) -> list[dict[str, Any]]:
+    if top_k < 1:
+        raise ValueError("top_k must be at least 1.")
+    index = load_index(store_path)
+    return rank_index(question, index, client, model, top_k)
 
 
 def get_client() -> OpenAI:

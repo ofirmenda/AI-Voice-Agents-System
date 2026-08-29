@@ -96,9 +96,9 @@ def test_extract_text_reads_pdf_fixture_across_pages():
 
 
 def test_extract_text_rejects_unsupported_extension(tmp_path: Path):
-    unsupported = tmp_path / "notes.md"
+    unsupported = tmp_path / "notes.docx"
     unsupported.write_text("hello", encoding="utf-8")
-    with pytest.raises(ValueError, match="Only .txt and .pdf"):
+    with pytest.raises(ValueError, match="Only .txt"):
         extract_text(unsupported)
 
 
