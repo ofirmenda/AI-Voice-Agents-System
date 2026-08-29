@@ -1,0 +1,26 @@
+{
+  "message": {
+    "type": "end-of-call-report",
+    "call": {
+      "id": "vapi-call-2b5d1f9e-7734",
+      "metadata": {
+        "booking_ref": "ELAL-7734"
+      },
+      "recordingUrl": "https://storage.vapi.ai/recordings/elal-7734.wav",
+      "endedReason": "assistant-ended-call"
+    },
+    "summary": "השיחה הופנתה לנציג אנושי לטיפול בבעיית דרכון חסר.",
+    "transcript": "נועם: שלום מיכל, מדבר נועם מאל על. אני מתקשר להשלים את הצ'ק אין לטיסה לברצלונה מחר בבוקר.\nהנוסעת: היי, כן, תודה.\nנועם: אני רואה שהצוות שלנו לא הצליח לאמת את הדרכון שלך במערכת. האם הדרכון בידך כרגע?\nהנוסעת: לא, הוא בבית, אני בעבודה.\nנועם: אני מבין. במקרה כזה לא נוכל להשלים את הצ'ק אין כעת, ואעביר את הפנייה לנציג אנושי שיצור איתך קשר. תודה.",
+    "analysis": {
+      "structuredData": {
+        "call_status": "Needs human",
+        "checkin_completed": false,
+        "baggage_changed": null,
+        "final_seat": null,
+        "ancillary_selected": null,
+        "unresolved_request": "לא ניתן להשלים צ'ק אין ללא דרכון תקף — הנוסעת דיווחה שדרכונה בבית.",
+        "human_followup_required": true
+      }
+    }
+  }
+}
