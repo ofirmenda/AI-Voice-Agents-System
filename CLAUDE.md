@@ -534,3 +534,40 @@ range of Hebrew policy questions, extract the `latency_ms` values from the conta
 compute p50, and paste the result. This replaces the derived 25 %/75 % figures from the
 seed data with a measurement of the *live* system.
 
+
+---
+
+## 11. Future work (roadmap — to complete later)
+
+Three scaling directions I would take this to next. Not required for the build to be
+"done"; captured here so the ideas do not get lost. Once written up properly they belong
+back in the README under a `## Roadmap` section.
+
+### 11.1 Real telephony
+
+Swap Vapi's Twilio-backed default number for a purchased Israeli DID and add the
+outbound scheduler at T-24h that Vapi does not provide out of the box. The scheduler is
+a small worker that reads `bookings` rows where `flight_date - now() BETWEEN 23h AND 25h`
+and pushes them into a Vapi campaign or dials them one at a time via the Vapi API.
+
+### 11.2 pgvector
+
+Move embeddings out of the in-process JSON blob and into a `chunks` table with a
+`vector(1536)` column and an IVF-Flat index. `/search` becomes
+`SELECT ... ORDER BY embedding <=> $1 LIMIT k` and the service scales horizontally.
+Because the RAG service already sits behind HTTP and the response contract is stable
+(`results[0].text`), no downstream caller — Vapi tool, Langflow tool — needs to change.
+
+### 11.3 Latency budget
+
+A voice conversation has a hard budget of ~1500 ms round-trip before it feels awkward.
+Today that budget is split across Deepgram (STT), the LLM, `/search`, and Vapi's TTS:
+~330 + 870 + ~50 (network to `/search`) + 430 ≈ 1680 ms per the assistant dashboard,
+which is just over budget. Concrete work items:
+
+- Instrument every hop and publish a p50/p95 dashboard (Prometheus + Grafana, or
+  Vapi's built-in analytics if it exposes per-hop timings).
+- Cache the top-k policy chunks for the ~20 most common Hebrew baggage/seat/meal
+  questions so `/search` on those returns from Redis and never hits OpenAI.
+- Consider Vapi's "Ultra Fast" LLM preset for turns where controllability matters less
+  than latency (acknowledgements, small talk).

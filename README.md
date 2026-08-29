@@ -94,8 +94,3 @@ pytest -v
 
 72 tests covering the RAG service (unit + API), the database (schema and CSV loader), the webhook (happy path, ticket creation, no-ticket, unknown booking, replay-idempotency, category/priority derivation), and the compose plumbing. Live-embeddings tests auto-skip without `OPENAI_API_KEY`, which is how CI runs.
 
-## Roadmap
-
-- **Real telephony.** Swap Vapi's Twilio-backed default number for a purchased Israeli DID and add the outbound scheduler at T-24h that Vapi doesn't provide out of the box.
-- **pgvector.** Move embeddings out of the in-process JSON blob and into a `chunks` table with a `vector(1536)` column and an IVF-Flat index. `/search` becomes `SELECT … ORDER BY embedding <=> $1 LIMIT k` and the service scales horizontally.
-- **Latency budget.** A voice conversation has a hard budget of ~1500 ms round-trip before it feels awkward. Instrument every hop (STT, LLM, `/search`, TTS), publish a p50/p95 dashboard, and cache the top-k policy chunks for the ~20 most common Hebrew baggage/seat/meal questions so `/search` on those never hits OpenAI.
