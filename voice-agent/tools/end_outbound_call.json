@@ -1,0 +1,18 @@
+{
+  "id": "98b4c562-faaa-4138-99ab-0b75f817a45b",
+  "createdAt": "2026-08-18T21:51:40.197Z",
+  "updatedAt": "2026-08-18T21:51:40.197Z",
+  "type": "endCall",
+  "function": {
+    "name": "end_outbound_call",
+    "strict": true,
+    "description": "End the call after the caller has no further questions, asks to end it, or the conversation is complete.",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    }
+  },
+  "orgId": "611d6c4b-db63-4caf-b79c-f7078ccf14fc",
+  "latestVersion": "v1"
+}

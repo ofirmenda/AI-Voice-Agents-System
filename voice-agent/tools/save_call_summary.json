@@ -1,0 +1,99 @@
+{
+  "id": "36ef3905-f831-4ea0-9f47-03b2c705492e",
+  "createdAt": "2026-08-19T09:54:33.540Z",
+  "updatedAt": "2026-08-19T15:01:33.434Z",
+  "type": "apiRequest",
+  "function": {
+    "name": "api_request_tool",
+    "description": "saves call summary in google sheets"
+  },
+  "messages": [
+    {
+      "type": "request-start",
+      "blocking": false
+    }
+  ],
+  "orgId": "611d6c4b-db63-4caf-b79c-f7078ccf14fc",
+  "name": "save_call_summary",
+  "url": "https://REDACTED-n8n-host.example/webhook/REDACTED-WORKFLOW-ID",
+  "method": "POST",
+  "body": {
+    "type": "object",
+    "required": [
+      "booking_ref",
+      "call_status",
+      "checkin_completed",
+      "call_summary"
+    ],
+    "properties": {
+      "final_seat": {
+        "description": "\tThe seat after the call",
+        "type": "string",
+        "default": ""
+      },
+      "booking_ref": {
+        "description": "The booking reference of this call, e.g. ELAL-8842",
+        "type": "string",
+        "default": ""
+      },
+      "call_status": {
+        "description": "Completed / No answer / Declined / Needs human",
+        "type": "string",
+        "default": ""
+      },
+      "call_summary": {
+        "description": "A short factual summary in Hebrew of the call",
+        "type": "string",
+        "default": ""
+      },
+      "call_timestamp": {
+        "description": "\tDate and time of the call",
+        "type": "string",
+        "default": ""
+      },
+      "baggage_changed": {
+        "description": "\tWhat baggage was added or changed, or ללא שינוי",
+        "type": "string",
+        "default": ""
+      },
+      "checkin_completed": {
+        "description": "Yes or No — only Yes if the check-in tool confirmed",
+        "type": "string",
+        "default": ""
+      },
+      "ancillary_selected": {
+        "description": "Any optional service selected, or אין",
+        "type": "string",
+        "default": ""
+      },
+      "unresolved_request": {
+        "description": "Anything left unresolved, or אין",
+        "type": "string",
+        "default": ""
+      },
+      "human_followup_required": {
+        "description": "\tYes or No",
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "variableExtractionPlan": {
+    "schema": {
+      "type": "object",
+      "required": [],
+      "properties": {}
+    }
+  },
+  "parameters": [
+    {
+      "key": "booking_ref",
+      "value": "{{booking_ref}}"
+    },
+    {
+      "key": "call_timestamp",
+      "value": "{{\"now\" | date: \"%Y-%m-%d %H:%M\"}}"
+    }
+  ],
+  "latestVersion": "v3"
+}
