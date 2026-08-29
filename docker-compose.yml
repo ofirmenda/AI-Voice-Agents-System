@@ -1,0 +1,92 @@
+# EL AL voice-ops — full local stack.
+#
+# `cp .env.example .env && docker compose up` brings up:
+#   - postgres        : schema + 5 support_requests seed rows via db/init.sql
+#   - db-seed         : one-shot, loads 4 bookings from the Sheet CSV
+#   - rag             : FastAPI /search + /ingest (port 8001 on host)
+#   - webhook         : FastAPI /vapi/end-of-call (port 8002 on host)
+#   - langflow        : Langflow UI (port 7860 on host)
+#
+# All services share the same Postgres. Langflow's internal metadata store is
+# left as its default (sqlite), so the app tables stay clean.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db-seed:
+    image: python:3.12-slim
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    volumes:
+      - ./db:/app/db:ro
+      - ./voice-agent/data:/app/voice-agent/data:ro
+    working_dir: /app
+    command: >-
+      sh -c "pip install --quiet 'psycopg[binary]>=3.1,<4' &&
+             python db/load_bookings.py voice-agent/data/check-in-calls.csv"
+    restart: "no"
+
+  rag:
+    build:
+      context: .
+      dockerfile: services/rag/Dockerfile
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - ./docs/policies:/app/docs/policies:ro
+      - rag-index:/app/data
+    ports:
+      - "8001:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  webhook:
+    build:
+      context: .
+      dockerfile: services/webhook/Dockerfile
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8002:8000"
+
+  langflow:
+    image: langflowai/langflow:latest
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "7860:7860"
+    volumes:
+      - langflow-data:/app/langflow
+
+volumes:
+  postgres-data:
+  rag-index:
+  langflow-data:
